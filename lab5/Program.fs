@@ -11,6 +11,10 @@ let solve a b c =
     else
         if D<0. then None
         else Quadratic(((-b+sqrt(D))/(2.0*a), (-b-sqrt(D))/(2.0*a)))
+
+let circleSurface r = Math.PI * r * r
+let multiplySurfaceH s h = s * h
+let cylinderVolumeSuperPosition = circleSurface >> multiplySurfaceH
 [<EntryPoint>]
 let main (argv :string[]) = 
     //task 1
@@ -21,4 +25,14 @@ let main (argv :string[]) =
      | None -> Console.WriteLine("No solution")
      | Linear(x) -> printfn "Linear quation x = %f" x
      | Quadratic(x1,x2) -> printfn "Quadratic equation: x1=%f, x=%f" x1 x2
+
+    Console.WriteLine("task3: Cylinder Volume via SuperPosition")
+
+    Console.WriteLine("Enter radius:")
+    let r = Console.ReadLine() |> float
+    Console.WriteLine("Enter height:")
+    let h = Console.ReadLine() |> float
+    let volume = cylinderVolumeSuperPosition r h
+    printfn "Cylinder Volume via SuperPosition: %f" volume
+
     0
