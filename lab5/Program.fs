@@ -15,6 +15,13 @@ let solve a b c =
 let circleSurface r = Math.PI * r * r
 let multiplySurfaceH s h = s * h
 let cylinderVolumeSuperPosition = circleSurface >> multiplySurfaceH
+let cylinderVolumeCurry r h = (circleSurface r) * h
+
+
+let rec digitSumUp num = 
+    if num = 0 then 0
+    else (num % 10) + (digitSumUp(num / 10))
+
 [<EntryPoint>]
 let main (argv :string[]) = 
     //task 1
@@ -34,5 +41,21 @@ let main (argv :string[]) =
     let h = Console.ReadLine() |> float
     let volume = cylinderVolumeSuperPosition r h
     printfn "Cylinder Volume via SuperPosition: %f" volume
+
+    Console.WriteLine("task3: Cylinder Volume via Curry")
+
+    Console.WriteLine("Enter radius:")
+    let r = Console.ReadLine() |> float
+    Console.WriteLine("Enter height:")
+    let h = Console.ReadLine() |> float
+    let volume = cylinderVolumeCurry r h
+    printfn "Cylinder Volume via Curry: %f" volume
+
+    Console.WriteLine("task4: Digit Sum (Recursion UP)")
+    Console.WriteLine("Enter number:")
+    let num = Console.ReadLine() |> int
+    let sum = digitSumUp num
+    printfn "Digit sum of %d is: %d" num sum
+
 
     0
