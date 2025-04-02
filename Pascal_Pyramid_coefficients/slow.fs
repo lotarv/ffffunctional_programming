@@ -44,4 +44,13 @@ let main argv =
 
     printfn "Число коэффициентов, кратных 10^%d: %d" target result
     printfn "Общее число слагаемых: %d" totalTerms
+    let v2_10 = primeExponentInFactorial 10 2
+    let v2_3 = primeExponentInFactorial 3 2
+    let v2_4 = primeExponentInFactorial 4 2
+    // let k = v2_10 - v2_3 -v2_3 - v2_4
+    printfn "%d" v2_10
+    printfn "%d" v2_3
+    printfn "%d" v2_4
+    // printfn "%d, %d, %d, %d" v2_10 v2_3 v2_4 k
+    
     0
