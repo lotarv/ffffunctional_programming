@@ -15,26 +15,40 @@ let primeExponentInTrinomial (n: int) (i: int) (j: int) (k: int) (p: int) =
     let kFact = primeExponentInFactorial k p
     nFact - iFact - jFact - kFact
 
-// Подсчёт числа триномиальных коэффициентов, кратных 10^target
+// Подсчёт числа триномиальных коэффициентов, кратных 10^target (с mutable)
+// let countMultiples (n: int) (exp2: int) (exp5: int) =
+//     let mutable count = 0L
+//     for i = 0 to n do
+//         for j = 0 to n - i do
+//             let k = n - i - j
+//             // Вычисляем v_2 и v_5 для текущей тройки (i, j, k)
+//             let v2 = primeExponentInTrinomial n i j k 2
+//             let v5 = primeExponentInTrinomial n i j k 5
+//             // Проверяем, кратно ли 10^target, то есть v_2 >= exp2 и v_5 >= exp5
+//             if v2 >= exp2 && v5 >= exp5 then
+//                 count <- count + 1L
+//     count
+
+//Подсчёт числа триномиальных коэффициентов, кратных 10^target (без mutable)
+
 let countMultiples (n: int) (exp2: int) (exp5: int) =
-    let mutable count = 0L
-    for i = 0 to n do
-        for j = 0 to n - i do
-            let k = n - i - j
-            // Вычисляем v_2 и v_5 для текущей тройки (i, j, k)
-            let v2 = primeExponentInTrinomial n i j k 2
-            let v5 = primeExponentInTrinomial n i j k 5
-            // Проверяем, кратно ли 10^target, то есть v_2 >= exp2 и v_5 >= exp5
-            if v2 >= exp2 && v5 >= exp5 then
-                count <- count + 1L
-    count
+    seq { for i in 0 .. n do
+            for j in 0 .. n - i ->
+                let k = n - i - j in (i, j, k) }
+    |> Seq.filter (fun (i, j, k) ->
+        let v2 = primeExponentInTrinomial n i j k 2
+        let v5 = primeExponentInTrinomial n i j k 5
+        v2 >= exp2 && v5 >= exp5)
+    |> Seq.length
+    |> int64
+
 
 [<EntryPoint>]
 let main argv =
-    let n = 10
-    let target = 2 // 10^target = 10^2
-    let exp2 = 2 // Степень 2 в 10^2
-    let exp5 = 2 // Степень 5 в 10^2
+    let n = 200000
+    let target = 12 // 10^target = 10^2
+    let exp2 = 12 // Степень 2 в 10^2
+    let exp5 = 12 // Степень 5 в 10^2
 
     // Общее число слагаемых
     let totalTerms = (int64 (n + 1)) * (int64 (n + 2)) / 2L

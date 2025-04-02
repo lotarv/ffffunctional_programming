@@ -1,25 +1,35 @@
 open System
 
 // Факториал для Пуассона
-let rec factorial (n: int) : int64 =
-    if n <= 1 then 1L
-    else int64 n * factorial (n - 1)
-
+let factorial (n: int) : int64 =
+    let rec factTail n acc = 
+        match n with
+        | 0L -> acc
+        | 1L -> acc
+        | _ -> factTail (n-1L) acc * n
+    factTail (int64 n) 1L
 
 // Функция для вычисления степени простого p в n!
-let primeExponentInFactorial (n: uint32) (p: uint32) : uint64 =
+let primeExponentInFactorial (n: int) (p: int) =
     let rec sumDivisions n acc =
-        if n = 0u then acc
-        else sumDivisions (n / p) (acc + uint64 (n / p))
-    sumDivisions n 0UL
+        if n = 0 then acc
+        else sumDivisions (n / p) (acc + n / p)
+    sumDivisions n 0
 
-// Приближение числа переносов через Пуассона
+// Приближение числа переносов через Пуассона (с mutable)
+// let poissonProbGreaterEqual (lambda: float) (k: int) : float =
+//     let mutable prob = 0.0
+//     for i in 0 .. k - 1 do
+//         let term = exp(-lambda) * (pown lambda i) / float (factorial i)
+//         prob <- prob + term
+//     1.0 - prob
+
+// Приближение числа переносов через Пуассона (без mutable)
 let poissonProbGreaterEqual (lambda: float) (k: int) : float =
-    let mutable prob = 0.0
-    for i in 0 .. k - 1 do
-        let term = exp(-lambda) * (pown lambda i) / float (factorial i)
-        prob <- prob + term
-    1.0 - prob
+    let probLessThanK = 
+        seq { 0 .. k - 1 }
+        |> Seq.sumBy (fun i -> exp(-lambda) * (pown lambda i) / float (factorial i))
+    1.0 - probLessThanK
 
 // Основная функция
 [<EntryPoint>]
